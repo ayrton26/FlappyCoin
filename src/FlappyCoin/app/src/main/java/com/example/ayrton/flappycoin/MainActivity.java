@@ -19,6 +19,7 @@ public class MainActivity extends Activity {
         FrameLayout frameLayout = findViewById(R.id.container);
         frameLayout.addView(game);
 
+
     }
 
     @Override
