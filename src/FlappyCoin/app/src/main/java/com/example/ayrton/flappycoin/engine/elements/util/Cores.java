@@ -13,4 +13,17 @@ public class Cores {
 
         return paint;
     }
+    public static Paint getGold(){
+        Paint paint = new Paint();
+        paint.setColor(0xFFFFD700);
+
+        return paint;
+    }
+
+    public static Paint getBlue(){
+        Paint paint = new Paint();
+        paint.setColor(0xFF0000FF);
+
+        return paint;
+    }
 }

@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.example.ayrton.flappycoin.R;
 import com.example.ayrton.flappycoin.engine.elements.Bitcoin;
+import com.example.ayrton.flappycoin.engine.elements.Obstaculo;
 import com.example.ayrton.flappycoin.engine.elements.util.Tela;
 
 /**
@@ -21,6 +22,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener{
     private boolean started;
     private SurfaceHolder surfaceHolder;
     private Bitcoin bitcoin;
+    private Obstaculo obstaculo;
     private Bitmap background;
     private Tela tela;
 
@@ -30,6 +32,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener{
         surfaceHolder = getHolder();
         tela = new Tela(this.getContext());
         bitcoin = new Bitcoin();
+        obstaculo = new Obstaculo(tela, tela.getLargura());
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.background);
         background = Bitmap.createScaledBitmap(b, b.getWidth(), tela.getAltura(), false);
         setOnTouchListener(this);
@@ -48,8 +51,11 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener{
             }
             Canvas canvas = this.surfaceHolder.lockCanvas();
             canvas.drawBitmap(background, 0, 0, null);
+            obstaculo.paint(canvas);
+            obstaculo.move();
             bitcoin.paint(canvas);
             bitcoin.queda();
+            bitcoin.avaliarColisoes(obstaculo);
 
             this.surfaceHolder.unlockCanvasAndPost(canvas);
         }

@@ -13,18 +13,28 @@ public class Bitcoin {
     private int altura;
     private static final int X = 100;
     private static final int RAIO = 50;
-    private static final Paint COR = Cores.getRed();
+    private static Paint COR = Cores.getRed();
 
-    public void paint(Canvas canvas){
+    public void paint(Canvas canvas) {
         canvas.drawCircle(X, altura, RAIO, COR);
     }
 
-    public void queda(){
+    public void queda() {
         this.altura += 5;
     }
 
-    public void pular(){
+    public void pular() {
         this.altura -= 150;
     }
 
+    public void avaliarColisoes(Obstaculo obstaculo) {
+        if (altura + RAIO >= obstaculo.getAlturaObstaculo()) {
+            int fronteiraDireita = X + RAIO;
+            int fronteiraEsquerda = X - RAIO;
+            if ((fronteiraDireita > obstaculo.getXInicial() && fronteiraDireita < obstaculo.getXFinal()) ||
+                    (fronteiraEsquerda > obstaculo.getXInicial() && fronteiraEsquerda < obstaculo.getXFinal())) {
+                COR = Cores.getBlue();
+            }
+        }
+    }
 }
