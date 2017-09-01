@@ -26,4 +26,11 @@ public class Cores {
 
         return paint;
     }
+
+    public static Paint getGreen(){
+        Paint paint = new Paint();
+        paint.setColor(0xFF00FF00);
+
+        return paint;
+    }
 }
