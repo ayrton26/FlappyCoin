@@ -12,7 +12,7 @@ import android.view.View;
 import com.example.ayrton.flappycoin.R;
 import com.example.ayrton.flappycoin.engine.elements.Bitcoin;
 import com.example.ayrton.flappycoin.engine.elements.Obstaculo;
-import com.example.ayrton.flappycoin.engine.elements.Vidas;
+import com.example.ayrton.flappycoin.engine.elements.Pontuacao;
 import com.example.ayrton.flappycoin.engine.elements.util.Tela;
 
 /**
@@ -24,18 +24,18 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener{
     private SurfaceHolder surfaceHolder;
     private Bitcoin bitcoin;
     private Obstaculo obstaculo;
-    private Vidas vidas;
     private Bitmap background;
     private Tela tela;
+    private Pontuacao pontuacao;
 
     public Game(Context context){
         super(context);
         started = false;
         surfaceHolder = getHolder();
         tela = new Tela(this.getContext());
-        bitcoin = new Bitcoin(tela);
-        obstaculo = new Obstaculo(tela, tela.getLargura());
-        vidas = new Vidas();
+        bitcoin = new Bitcoin(tela, context);
+        obstaculo = new Obstaculo(tela, tela.getLargura(), context);
+        pontuacao = new Pontuacao();
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.background);
         background = Bitmap.createScaledBitmap(b, b.getWidth(), tela.getAltura(), false);
         setOnTouchListener(this);
@@ -59,8 +59,11 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener{
             bitcoin.paint(canvas);
             bitcoin.queda();
 
-            if (bitcoin.avaliarColisoes(obstaculo)) vidas.perderVidas();
-            vidas.paint(canvas);
+            if (bitcoin.avaliarMovimento(obstaculo)){
+                pontuacao.acumular();
+            }
+
+            pontuacao.paint(canvas);
 
             this.surfaceHolder.unlockCanvasAndPost(canvas);
         }
