@@ -94,5 +94,9 @@ public class Bitcoin {
         return false;
     }
 
+    public boolean hasLife(){
+        return this.vidas.hasLife();
+    }
+
 
 }

@@ -13,7 +13,10 @@ import com.example.ayrton.flappycoin.R;
 import com.example.ayrton.flappycoin.engine.elements.Bitcoin;
 import com.example.ayrton.flappycoin.engine.elements.Obstaculo;
 import com.example.ayrton.flappycoin.engine.elements.Pontuacao;
+import com.example.ayrton.flappycoin.engine.elements.Score;
+import com.example.ayrton.flappycoin.engine.elements.User;
 import com.example.ayrton.flappycoin.engine.elements.util.Tela;
+import com.example.ayrton.flappycoin.engine.net.ScoreDispatcher;
 
 /**
  * Created by ayrton on 22/08/17.
@@ -53,17 +56,24 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener{
                 continue;
             }
             Canvas canvas = this.surfaceHolder.lockCanvas();
-            canvas.drawBitmap(background, 0, 0, null);
-            obstaculo.paint(canvas);
-            obstaculo.move();
-            bitcoin.paint(canvas);
-            bitcoin.queda();
+            if (bitcoin.hasLife()){
+                canvas.drawBitmap(background, 0, 0, null);
+                obstaculo.paint(canvas);
+                obstaculo.move();
+                bitcoin.paint(canvas);
+                bitcoin.queda();
 
-            if (bitcoin.avaliarMovimento(obstaculo)){
-                pontuacao.acumular();
+                if (bitcoin.avaliarMovimento(obstaculo)){
+                    pontuacao.acumular();
+                }
+
+                pontuacao.paint(canvas);
+
+            } else {
+                this.enviarPontuacao();
+                started = false;
             }
 
-            pontuacao.paint(canvas);
 
             this.surfaceHolder.unlockCanvasAndPost(canvas);
         }
@@ -78,5 +88,12 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener{
     public boolean onTouch(View v, MotionEvent e){
         bitcoin.pular();
         return false;
+    }
+
+    private void enviarPontuacao(){
+        User u = new User(4, "Ayrton", "ayrton@gmail");
+        Score s = new Score(u.getId(), u, pontuacao.getPontos());
+        ScoreDispatcher sd = new ScoreDispatcher();
+        sd.send(s);
     }
 }

@@ -38,4 +38,8 @@ public class Vidas {
     public void perderVidas(){
         vidas = vidas -1;
     }
+
+    public boolean hasLife(){
+        return this.vidas > 0;
+    }
 }

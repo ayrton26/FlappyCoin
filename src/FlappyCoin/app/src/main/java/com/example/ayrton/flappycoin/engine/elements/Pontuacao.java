@@ -26,4 +26,8 @@ public class Pontuacao {
     public void paint(Canvas canvas){
         canvas.drawText("" + fib2, 200, 50, Cores.getWhiteText());
     }
+
+    public int getPontos(){
+        return fib2;
+    }
 }
