@@ -26,8 +26,11 @@ public class Bitcoin {
     private static final int fronteiraDireita = X + RAIO;
     private static final int fronteiraEsquerda = X - RAIO;
     private boolean candidatePontuacao;
+    private Tela tela;
+
 
     public Bitcoin (Tela tela, Context context){
+        this.tela = tela;
         altura = tela.getAltura()/2;
         invencivel = false;
         candidatePontuacao = false;
@@ -77,7 +80,7 @@ public class Bitcoin {
                     (fronteiraEsquerda > obstaculo.getXInicial() && fronteiraEsquerda < obstaculo.getXFinal())) {
                 vidas.perderVidas();
                 invencivel = true;
-                turnosInvencivel = 40;
+                turnosInvencivel = 50;
                 cor = Cores.getGreen();
                 candidatePontuacao = false;
                 return false;
@@ -99,4 +102,12 @@ public class Bitcoin {
     }
 
 
+    public void reset() {
+        vidas.reset();
+        altura = tela.getAltura()/2;
+    }
+
+    public void end() {
+        invencivel = false;
+    }
 }

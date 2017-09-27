@@ -20,6 +20,11 @@ import okhttp3.Response;
 public class ScoreDispatcher implements Runnable{
     private static final String URL = "http://wildfly-bct.a3c1.starter-us-west-1.openshiftapps.com/rest/score/";
     private Score score;
+    private ScoreDispatcherListener scoreDispatcherListener;
+
+    public ScoreDispatcher(ScoreDispatcherListener scoreDispatcherListener){
+        this.scoreDispatcherListener = scoreDispatcherListener;
+    }
 
 
     public void send(Score s){
@@ -42,7 +47,9 @@ public class ScoreDispatcher implements Runnable{
                     .put(body)
                     .build();
             Response response = client.newCall(request).execute();
+            this.scoreDispatcherListener.notifySuccess();
         } catch (Exception e){
+            this.scoreDispatcherListener.notifyError();
             Log.e("Score Dispatcher", "Erro de envio", e);
         }
 

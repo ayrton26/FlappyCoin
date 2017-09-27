@@ -58,4 +58,7 @@ public class Obstaculo {
     }
 
 
+    public void reset() {
+        posicao = posicaoInicial;
+    }
 }

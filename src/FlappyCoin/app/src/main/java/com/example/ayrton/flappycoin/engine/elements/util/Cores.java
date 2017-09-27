@@ -45,4 +45,13 @@ public class Cores {
         return paint;
     }
 
+    public static Paint getRedText(){
+        Paint paint = new Paint();
+        paint.setColor(0XFFFF0000);
+        paint.setTextSize(80);
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        paint.setShadowLayer(3, 5, 5, 0XFFFFFFFF);
+
+        return paint;
+    }
 }

@@ -9,25 +9,25 @@ import com.example.ayrton.flappycoin.engine.elements.util.Cores;
  */
 
 public class Pontuacao {
-    private int fib1;
-    private int fib2;
+    private int pontos;
 
     public  Pontuacao (){
-        fib1 = 0;
-        fib2 = 1;
+        pontos = 0;
     }
 
     public void acumular(){
-        int temp = fib2;
-        fib2 = fib1 + fib2;
-        fib1 = temp;
+        pontos++;
     }
 
     public void paint(Canvas canvas){
-        canvas.drawText("" + fib2, 200, 50, Cores.getWhiteText());
+        canvas.drawText("" + pontos, 200, 50, Cores.getWhiteText());
     }
 
     public int getPontos(){
-        return fib2;
+        return pontos;
+    }
+
+    public void reset() {
+        pontos = 0;
     }
 }

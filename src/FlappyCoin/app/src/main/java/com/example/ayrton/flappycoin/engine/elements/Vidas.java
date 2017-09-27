@@ -42,4 +42,8 @@ public class Vidas {
     public boolean hasLife(){
         return this.vidas > 0;
     }
+
+    public void reset() {
+        vidas = 3;
+    }
 }
