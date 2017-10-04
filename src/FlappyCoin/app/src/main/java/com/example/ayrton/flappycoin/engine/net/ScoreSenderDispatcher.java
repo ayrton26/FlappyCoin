@@ -17,13 +17,13 @@ import okhttp3.Response;
  * Created by ayrton on 20/09/17.
  */
 
-public class ScoreDispatcher implements Runnable{
+public class ScoreSenderDispatcher implements Runnable{
     private static final String URL = "http://wildfly-bct.a3c1.starter-us-west-1.openshiftapps.com/rest/score/";
     private Score score;
-    private ScoreDispatcherListener scoreDispatcherListener;
+    private ScoreSenderDispatcherListener scoreSenderDispatcherListener;
 
-    public ScoreDispatcher(ScoreDispatcherListener scoreDispatcherListener){
-        this.scoreDispatcherListener = scoreDispatcherListener;
+    public ScoreSenderDispatcher(ScoreSenderDispatcherListener scoreSenderDispatcherListener){
+        this.scoreSenderDispatcherListener = scoreSenderDispatcherListener;
     }
 
 
@@ -47,9 +47,9 @@ public class ScoreDispatcher implements Runnable{
                     .put(body)
                     .build();
             Response response = client.newCall(request).execute();
-            this.scoreDispatcherListener.notifySuccess();
+            this.scoreSenderDispatcherListener.notifySenderSuccess();
         } catch (Exception e){
-            this.scoreDispatcherListener.notifyError();
+            this.scoreSenderDispatcherListener.notifySenderError();
             Log.e("Score Dispatcher", "Erro de envio", e);
         }
 

@@ -17,14 +17,18 @@ import com.example.ayrton.flappycoin.engine.elements.Score;
 import com.example.ayrton.flappycoin.engine.elements.User;
 import com.example.ayrton.flappycoin.engine.elements.util.Cores;
 import com.example.ayrton.flappycoin.engine.elements.util.Tela;
-import com.example.ayrton.flappycoin.engine.net.ScoreDispatcher;
-import com.example.ayrton.flappycoin.engine.net.ScoreDispatcherListener;
+import com.example.ayrton.flappycoin.engine.net.ScoreListerDispatcher;
+import com.example.ayrton.flappycoin.engine.net.ScoreListerDispatcherListener;
+import com.example.ayrton.flappycoin.engine.net.ScoreSenderDispatcher;
+import com.example.ayrton.flappycoin.engine.net.ScoreSenderDispatcherListener;
+
+import java.util.ArrayList;
 
 /**
  * Created by ayrton on 22/08/17.
  */
 
-public class Game extends SurfaceView implements Runnable, View.OnTouchListener, ScoreDispatcherListener{
+public class Game extends SurfaceView implements Runnable, View.OnTouchListener, ScoreSenderDispatcherListener, ScoreListerDispatcherListener {
     private boolean started;
     private SurfaceHolder surfaceHolder;
     private Bitcoin bitcoin;
@@ -33,6 +37,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener,
     private Tela tela;
     private Pontuacao pontuacao;
     private String sendResult;
+    private ArrayList<Score> scoreList;
 
     public Game(Context context){
         super(context);
@@ -91,11 +96,24 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener,
                     }
                 } else {
                     this.enviarPontuacao();
-                    this.end();//TODO Exibir ranking
+                    this.receberRanking();
+
+                    this.end();
+
                 }
             } else {
                 canvas.drawText("Game Over", 200, 300, Cores.getRedText());
                 canvas.drawText(this.getSendResult(), 200, 500, Cores.getRedText());
+                if (this.scoreList != null){
+                    int y = 600;
+                    for (Score s : this.scoreList){
+
+                        canvas.drawText(s.getUsuario().getNome() + ":" + s.getPontos(), 200, y, Cores.getRedText());
+
+                        y += 100;
+                    }
+                }
+
             }
 
             this.surfaceHolder.unlockCanvasAndPost(canvas);
@@ -120,17 +138,36 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener,
     private void enviarPontuacao(){
         User u = new User(4, "Ayrton", "ayrton@gmail"); //TODO tirar hardcoded
         Score s = new Score(u.getId(), u, pontuacao.getPontos());
-        ScoreDispatcher sd = new ScoreDispatcher(this);
+        ScoreSenderDispatcher sd = new ScoreSenderDispatcher(this);
         sd.send(s); //TODO feedback de trabalho em segundo plano para usuario
     }
 
+    private void receberRanking(){
+        ScoreListerDispatcher ld = new ScoreListerDispatcher(this);
+        ld.receive();
+    }
+
     @Override
-    public void notifySuccess() {
+    public void notifySenderSuccess() {
         setSendResult("Enviado com Sucesso");
     }
 
     @Override
-    public void notifyError() {
+    public void notifySenderError() {
         setSendResult("Score não Enviado");
+    }
+
+    @Override
+    public void notifyListerSuccess(ArrayList<Score> result) {
+        setListerResult(result);
+    }
+
+    @Override
+    public void notifyListerError() {
+        setListerResult(null);
+    }
+
+    private synchronized void setListerResult(ArrayList<Score> result){
+        this.scoreList = result;
     }
 }
